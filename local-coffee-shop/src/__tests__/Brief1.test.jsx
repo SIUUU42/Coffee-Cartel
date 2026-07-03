@@ -34,23 +34,18 @@ describe('Brief 1: Technical Requirements', () => {
     const { container } = render(<App />);
     
     // Look for a theme toggle mechanism (using common labels like theme, dark, light, or mode)
-    const toggleBtn = screen.queryByRole('button', { name: /theme|dark|light|mode/i });
+    // getByRole will throw an error and fail the test if the button does not exist
+    const toggleBtn = screen.getByRole('button', { name: /theme|dark|light|mode/i });
     
-    if (toggleBtn) {
-      fireEvent.click(toggleBtn);
-      
-      // Verify dark/light class manipulation on a core container (document or root div)
-      const hasThemeClass = document.documentElement.classList.contains('dark') || 
-                            document.documentElement.classList.contains('light') ||
-                            (container.firstChild && container.firstChild.classList.contains('dark')) ||
-                            (container.firstChild && container.firstChild.classList.contains('light'));
-                            
-      expect(hasThemeClass).toBe(true);
-    } else {
-      // We skip the direct assert if we can't find standard naming, but you can 
-      // replace the query above with the exact test ID if standardizing on one.
-      console.warn("Theme toggle button not found using standard labels. Make sure it exists.");
-    }
+    fireEvent.click(toggleBtn);
+    
+    // Verify dark/light class manipulation on a core container (document or root div)
+    const hasThemeClass = document.documentElement.classList.contains('dark') || 
+                          document.documentElement.classList.contains('light') ||
+                          (container.firstChild && container.firstChild.classList.contains('dark')) ||
+                          (container.firstChild && container.firstChild.classList.contains('light'));
+                          
+    expect(hasThemeClass).toBe(true);
   });
 
   it('3. Component Integration: uses structural components from Phase 1 library', () => {
